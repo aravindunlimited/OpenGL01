@@ -195,6 +195,7 @@ int main(void)
 	glm::vec3 initPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	Camera thirdPerson(initPos, "PERSPECTIVE");
 	glm::mat4 cameraProjection = thirdPerson.getCameraProjection();
+	glm::mat4 cameraSpin = thirdPerson.getCameraSpin();
 
 	glm::mat4 model_tran = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 model_rot = glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -281,12 +282,13 @@ int main(void)
 		shader.setUniform1a("u_TexCoord", 2, texCoord);
 		texture.bind(ContainerTexture, 0);
 		texture.bind(WallTexture, 1);
+		cameraSpin = thirdPerson.getCameraSpin();
 
 		for (int i = 0; i < 10; i++)
 		{
 			model_tran = glm::translate(glm::mat4(1.0f), cubePositions[i]); 
-		    model = model_rot * model_tran;
-			result = cameraProjection * model;
+		    model = model_rot  * model_tran ;
+			result = cameraProjection * thirdPerson.cameraRotView * model ;
 			shader.setUniformMat4("u_projection", result);
 			buffer.dynamicVertex((float*)& position, sizeof(position));
 
