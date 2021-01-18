@@ -48,6 +48,9 @@
     <ClCompile Include="CallBack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FirstPersonCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\basicShader.fs" />
@@ -82,6 +85,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CallBack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FirstPersonCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

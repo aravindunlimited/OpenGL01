@@ -29,6 +29,8 @@ void GLerrorProcessing(const int line, const std::string& func)
 
 void Renderer::Clear()
 {
+
+	glClearColor(0, 0, 0, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -37,7 +39,7 @@ void Renderer::drawStuffs( VertexArrayObject& vao,  IndexBuffer& ib,  Shader& sh
 	glActiveTexture(GL_TEXTURE0); GLerrorProcessing(__LINE__, __FUNCTION__);
 	vao.bind();
 	ib.bind();
-	shader.use();
+	//shader.use();
 	
 	glDrawElements(GL_TRIANGLES, ib.getIndexSize(), GL_UNSIGNED_INT, nullptr);	GLerrorProcessing(__LINE__, __FUNCTION__);
 

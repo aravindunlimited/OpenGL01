@@ -14,26 +14,26 @@ struct quart
 	float w;
 };
 
-class Camera : public CallBack
+class FirstPersonCamera : public CallBack
 {
 public:
 	glm::vec3 cameraPos;
 	glm::mat4 cameraProjection, cameraView, cameratTranView, cameraRotView, cameraYawview, cameraTranslate;
-	Camera(glm::vec3 initPos, std::string projectionType);
+	FirstPersonCamera(glm::vec3 initPos, std::string projectionType);
 	glm::mat4 getCameraProjection();
 	glm::mat4 getCameraSpin();
-	~Camera();
+	glm::vec3 getCameraPos();
+	~FirstPersonCamera();
 	glm::mat4 updateCamera(GLFWwindow* window);
 private:
 	float cameraSpeed = 0.0f; // adjust accordingly
 	bool firstMouse = true;
 	glm::mat4 spinRot, yawRot;
 	const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 cameraFront, cameraUp, cameraRight, cameraRightOriginal, referenceUp;
+	glm::vec3 cameraFront, cameraUp, cameraRight;
 	float zoom = 45.0f;
 	float cameraAngle = 0.0f;
-	glm::mat4 cameraPosM, cameraPosMT;
-	float yaw = 0.0f, pitch = -90.0f, spin = 90.0f, immyaw = 0.0f, immspin = 0.0f;
+	float yaw = 0.0f, pitch = -90.0f, spin = 90.0f;
 	double xpos, ypos;
 	float lastX = 400, lastY = 300;
 	const float sensitivity = 0.1f;

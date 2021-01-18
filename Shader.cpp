@@ -51,18 +51,16 @@ unsigned int Shader::CreateShader(const std::string& vertexshader, const std::st
 	glValidateProgram(program); GLerrorProcessing(__LINE__, __FUNCTION__);
 	glDeleteShader(vs); GLerrorProcessing(__LINE__, __FUNCTION__);
 	glDeleteShader(fs); GLerrorProcessing(__LINE__, __FUNCTION__);
-
 	return program;
 }
 
-Shader::Shader(const std::string& vertexshader, const std::string& fragmentshader) : m_location(0)
+Shader::Shader(const std::string& vertexshader, const std::string& fragmentshader) : m_location(0), m_shader(CreateShader(vertexshader, fragmentshader))
 {
-	m_shader = CreateShader(vertexshader, fragmentshader); 
 	use();
-	setColor("ufColor", 1.0f, 2.0f, 0.0f, 1.0f);
+	//setColor("ufColor", 1.0f, 2.0f, 0.0f, 1.0f);
 }
 
-void Shader::use()
+void Shader::use() 
 {
 
 	glUseProgram(m_shader); GLerrorProcessing(__LINE__, __FUNCTION__);
@@ -70,64 +68,68 @@ void Shader::use()
 	
 }
 
-void Shader::setColor(const GLchar* uniformCode, float x, float y, float z, float alpha)
+void Shader::setColor(const GLchar* uniformCode, float x, float y, float z, float alpha)  
 {
-	m_location = getUniform("ufColor"); GLerrorProcessing(__LINE__, __FUNCTION__);
-	glUniform4f(m_location, x, y, z, alpha); GLerrorProcessing(__LINE__, __FUNCTION__);
+	int location = getUniform("ufColor"); GLerrorProcessing(__LINE__, __FUNCTION__);
+	glUniform4f(location, x, y, z, alpha); GLerrorProcessing(__LINE__, __FUNCTION__);
 }
 
-int Shader::getUniform(const GLchar* uniformCode)
+int Shader::getUniform(const GLchar* uniformCode) 
 {
-	if (m_locatonMap.find(uniformCode) != m_locatonMap.end()) return m_locatonMap[uniformCode];
-	m_location = glGetUniformLocation(m_shader, uniformCode);
-	if (m_location == -1) {
+	auto val = m_locatonMap.find(uniformCode);
+	if (val != m_locatonMap.end()) return val->second;
+	int location = glGetUniformLocation(m_shader, uniformCode);
+	if (location == -1) {	
 		GLerrorProcessing(__LINE__, __FUNCTION__);
 	}
-	m_locatonMap[uniformCode] = m_location;
-	return m_location;
-}
-
-void Shader::setUniform2f(const GLchar* uniformCode, float x, float y)
-{
-	m_location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
-	glUniform2f(m_location, x, y); GLerrorProcessing(__LINE__, __FUNCTION__);
+	m_locatonMap.insert({ uniformCode, location });
+	return location;
 }
 
 
-void Shader::setUniform3f(const GLchar* uniformCode, float x, float y, float z)
-{
-	m_location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
-	glUniform3f(m_location, x, y, z); GLerrorProcessing(__LINE__, __FUNCTION__);
+void Shader::setUniform2f(const GLchar* uniformCode, float x, float y)  
+{	
+	use();
+	int location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
+	glUniform2f(location, x, y); GLerrorProcessing(__LINE__, __FUNCTION__);
 }
 
-void Shader::setUniform1f(const GLchar* uniformCode, float x)
+
+void Shader::setUniform3f(const GLchar* uniformCode, float x, float y, float z) 
 {
-	m_location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
-	glUniform1f(m_location, x); GLerrorProcessing(__LINE__, __FUNCTION__);
+	int location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
+	glUniform3f(location, x, y, z); GLerrorProcessing(__LINE__, __FUNCTION__);
+	
 }
 
-void Shader::setUniform1i(const GLchar* uniformCode, int x)
+void Shader::setUniform1f(const GLchar* uniformCode, float x) 
 {
-	m_location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
-	glUniform1i(m_location, x); GLerrorProcessing(__LINE__, __FUNCTION__);
+	int location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
+	glUniform1f(location, x); GLerrorProcessing(__LINE__, __FUNCTION__);
 }
 
-void Shader::setUniform1a(const GLchar* uniformCode, int count, int* x)
+void Shader::setUniform1i(const GLchar* uniformCode, int x) 
 {
-	m_location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
-	glUniform1iv(m_location, count, x); GLerrorProcessing(__LINE__, __FUNCTION__);
+	int location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
+	glUniform1i(location, x); GLerrorProcessing(__LINE__, __FUNCTION__);
 }
 
-void Shader::setUniform4f(const GLchar* uniformCode, float x, float y, float z, float alpha)
+void Shader::setUniform1a(const GLchar* uniformCode, int count, int* x) 
 {
-	m_location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
-	glUniform4f(m_location, x, y, z, alpha); GLerrorProcessing(__LINE__, __FUNCTION__);
+	int location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
+	glUniform1iv(location, count, x); GLerrorProcessing(__LINE__, __FUNCTION__);
 }
 
-void Shader::setUniformMat4(const GLchar* uniformCode, glm::mat4 matrix)
+void Shader::setUniform4f(const GLchar* uniformCode, float x, float y, float z, float alpha) 
 {
-	m_location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
-	glUniformMatrix4fv(m_location,1, GL_FALSE, &matrix[0][0] ); GLerrorProcessing(__LINE__, __FUNCTION__);
+	int location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
+	glUniform4f(location, x, y, z, alpha); GLerrorProcessing(__LINE__, __FUNCTION__);
+}
+
+void Shader::setUniformMat4(const GLchar* uniformCode, glm::mat4 matrix) 
+{
+	int location = getUniform(uniformCode); GLerrorProcessing(__LINE__, __FUNCTION__);
+	glUniformMatrix4fv(location,1, GL_FALSE, &matrix[0][0] ); GLerrorProcessing(__LINE__, __FUNCTION__);
 }
 
 void Shader::move(float xpos, float ypos, float zpos)
